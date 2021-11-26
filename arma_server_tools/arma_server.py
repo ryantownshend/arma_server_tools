@@ -152,7 +152,7 @@ class ArmaServer():
     arma_home = '/home/steam/.steam/steamcmd/arma3/'
     arma_config = '/home/steam/arma_configs'
     arma_command = None
-    mods_folder = "mods"
+    # mods_folder = "mods"
 
     def parse_yaml(self, yaml_file):
         with open(yaml_file, 'r') as stream:
@@ -189,10 +189,13 @@ class ArmaServer():
 
         if self.mods:
 
-            # MOD="mods/@cba_a3;mods/@ace;"
+            # MOD="mods/@cba_a3;mods/@ace;"  # cannot handle cdlc content
+
             mods_list = []
             for m in self.mods:
-                mods_list.append(f'{self.mods_folder}/@{m};')
+                # cannot handle cdlc content
+                # mods_list.append(f'{self.mods_folder}/@{m};')
+                mods_list.append(f'{m};')
 
             mods_string = "".join(mods_list)
             command.append(f'-mods={mods_string}')

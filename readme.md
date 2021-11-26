@@ -70,3 +70,9 @@ mods:
   - cba_a3 
   - niarms_all
 ```
+
+
+## steamcmd stuff
+
+<https://developer.valvesoftware.com/wiki/SteamCMD>
+

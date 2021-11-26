@@ -24,11 +24,13 @@ class Workshop(object):
         # re.compile(''),
     ]
 
-    def __init__(self, item_id, item_name, is_examine):
+    def __init__(self, item_id, item_name, is_examine, beta, betapassword):
         self.item_id = item_id
         self.item_name = item_name
         self.is_examine = is_examine
         self.arma_config = home_config('arma_server.yaml')
+        self.beta = beta 
+        self.betapassword = betapassword
 
     def download(self):
         click.secho(
@@ -44,9 +46,19 @@ class Workshop(object):
             '+workshop_download_item',
             '107410',
             self.item_id,
-            'validate',
-            '+quit'
         ]
+
+        if self.beta:
+            steam_cmd.append('-beta')
+            steam_cmd.append(self.beta)
+
+        if self.betapassword:
+            steam_cmd.append('-betapassword')
+            steam_cmd.append(self.betapassword)
+
+        steam_cmd.append('validate')
+        steam_cmd.append('+quit')
+        
 
         process = subprocess.Popen(
             steam_cmd,
@@ -154,11 +166,21 @@ class Workshop(object):
     is_flag=True,
     help="show filenames and folder contents to examine what is pulled down",
 )
+@click.option(
+    "--beta",
+    "beta",
+    help="beta name",
+)
+@click.option(
+    "--betapassword",
+    "betapassword",
+    help="betapassword",
+)
 @click_log.simple_verbosity_option(logger)
-def main(item_id, item_name, is_mission, is_mod, is_examine):
+def main(item_id, item_name, is_mission, is_mod, is_examine, beta, betapassword):
 
     if item_id and item_name:
-        workshop = Workshop(item_id, item_name, is_examine)
+        workshop = Workshop(item_id, item_name, is_examine, beta, betapassword)
 
         if workshop.download():
             if is_examine:
