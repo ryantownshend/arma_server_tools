@@ -1,5 +1,13 @@
 
+# https://community.bistudio.com/wiki/Arma_3:_Server_Config_File
+
+
+
 class Generator(object):
+
+    def __init__(self, data):
+        self.data = data
+
 
     # hostname = "Fun and Test Server";
     # motdInterval = 5;
@@ -33,4 +41,4 @@ class Generator(object):
         return "".join(product)
 
     def generate(self):
-        pass
+        for 

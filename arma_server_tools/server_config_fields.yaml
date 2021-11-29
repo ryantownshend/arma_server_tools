@@ -1,0 +1,192 @@
+---
+- passwordAdmin:
+  - object: simple_lineitem
+  - arg: string
+- password:
+  - object: simple_lineitem
+  - arg: string
+- serverCommandPassword:
+  - object: simple_lineitem
+  - arg: string
+- hostname:
+  - object: simple_lineitem
+  - arg: string
+- maxPlayers:
+  - object: simple_lineitem
+  - integer
+- motd:
+  - object: list_items
+  - arg: string
+- admins:
+  - object: list_items
+- headlessClients:
+  - object: list_items
+- localClient:
+  - object: list_items
+- voteTheshold:
+  - object: simple_lineitem
+  - arg: integer
+- voteMissionPlayers:
+  - object: simple_lineitem
+  - arg: integer
+- allowVoteCmds:
+  - object: list_items
+  - arg: string
+- allowVotedAdminCmds:
+  - object: list_items
+  - arg: string
+- kickduplicate:
+  - object: simple_lineitem
+  - arg: integer
+- loopback:
+  - object: simple_lineitem
+  - arg: bool
+- upnp:
+  - object: simple_lineitem
+  - arg: bool
+- allowedFilePatching:
+  - object: simple_lineitem
+  - arg: integer
+- allowedLoadFileExtensions:
+  - object: list_items
+- allowedPreprocessFileExtensions:
+  - object: list_items
+- allowedHTMLLoadExtensions:
+  - object: list_items
+- allowedHTMLLoadURIs:
+  - object: list_items
+- filePatchingExceptions:
+  - object: list_items
+- disconnectTimeout:
+  - object: simple_lineitem
+  - arg: integer
+- maxdesync:
+  - object: simple_lineitem
+  - arg: integer
+- maxping:
+  - object: simple_lineitem
+  - arg: integer
+- maxpacketloss:
+  - object: simple_lineitem
+  - arg: integer
+- kickClientsOnSlowNetwork:
+  - object: list_items
+- enablePlayerDiag:
+  - object: simple_lineitem
+  - arg: integer
+- callExtReportLimit:
+  - object: simple_lineitem
+  - arg: integer
+- kickTimeout:
+  - object: list_items
+- votingTimeOut:
+  - object: simple_lineitem
+  - arg: integer
+- roleTimeOut:
+  - object: list_items
+  - arg: integer
+- briefingTimeOut:
+  - object: list_items
+  - arg: integer
+- debriefingTimeOut:
+  - object: list_items
+  - arg: integer
+- lobbyIdleTimeout:
+  - object: simple_lineitem
+  - arg: integer
+- missionsToServerRestart:
+  - object: simple_lineitem
+  - arg: integer
+- missionsToShutdown:
+  - object: simple_lineitem
+  - arg: integer
+- autoSelectMission:
+  - object: simple_lineitem
+  - arg: bool
+- randomMissionOrder:
+  - object: simple_lineitem
+  - arg: bool
+- disableChannels:
+  - object: list_items
+- verifySignatures:
+  - object: simple_lineitem
+  - arg: integer
+- drawingInMap:
+  - object: simple_lineitem
+  - arg: bool
+- disableVoN:
+  - object: simple_lineitem
+  - arg: integer
+- vonCodecQuality:
+  - object: simple_lineitem
+  - arg: integer
+- vonCodec:
+  - object: simple_lineitem
+  - arg: integer
+- skipLobby:
+  - object: simple_lineitem
+  - arg: bool
+- allowProfileGlasses:
+  - object: simple_lineitem
+  - arg: bool
+- zeusCompositionScriptLevel:
+  - object: simple_lineitem
+  - arg: integer
+- logFile:
+  - object: simple_lineitem
+  - arg: string
+- doubleIdDetected:
+  - object: simple_lineitem
+  - arg: command
+- onUserConnected:
+  - object: simple_lineitem
+  - arg: command
+- onUserDisconnected:
+  - object: simple_lineitem
+  - arg: command
+- onHackedData:
+  - object: simple_lineitem
+  - arg: command
+- onDifferentData:
+  - object: simple_lineitem
+  - arg: command
+- onUnsignedData:
+  - object: simple_lineitem
+  - arg: command
+- onUserKicked:
+  - object: simple_lineitem
+  - arg: command
+- regularCheck:
+  - object: simple_lineitem
+  - arg: command
+- BattlEye:
+  - object: simple_lineitem
+  - arg: integer
+- timeStampFormat:
+  - object: simple_lineitem
+  - arg: string
+- forceRotorLibSimulation:
+  - object: simple_lineitem
+  - arg: integer
+- persistent:
+  - object: simple_lineitem
+  - arg: integer
+- requiredBuild:
+  - object: simple_lineitem
+  - arg: float
+- statisticsEnabled:
+  - object: simple_lineitem
+  - arg: integer
+- forcedDifficulty:
+  - object: simple_lineitem
+  - arg: string
+- steamProtocolMaxDataSize:
+  - object: simple_lineitem
+  - arg: integer
+- armaUnitsTimeout:
+  - object: simple_lineitem
+  - arg: integer
+
+- missionWhitelist:
+  - object: list_items
+  - arg: string
