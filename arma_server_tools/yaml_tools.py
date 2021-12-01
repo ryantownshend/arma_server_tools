@@ -32,3 +32,14 @@ def build_empty_config(config_file):
     }
     with open(config_file, 'w', encoding='utf8') as outfile:
         yaml.dump(data, outfile, default_flow_style=False, allow_unicode=True)
+
+
+def load_local_yaml(filename):
+
+    product = None
+    with open(filename, 'r') as stream:
+        try:
+            product = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+    return product
