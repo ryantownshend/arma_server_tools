@@ -8,18 +8,15 @@ Take the exported list of mods from the Arma Launcher and parse it.
 import re
 import click
 from bs4 import BeautifulSoup
-from enum import Enum
-
-class Output(Enum):
-    PLAIN = 'plain'
-    UPDATE = 'update'
-    MARKDOWN = 'markdown'
 
 FORMAT_OPTION = ('plain', 'update', 'markdown')
 
+
 class PresetParser(object):
+    """Tool for parsing arma 3 launcher preset exports."""
 
     def __init__(self, html_file, output_format):
+        """Init."""
         self.html_file = html_file
         self.output_format = output_format
 
@@ -29,7 +26,9 @@ class PresetParser(object):
         #     self.output_format = Output.UPDATE
         # else: 
         #     self.output_format = Output.MARKDOWN
+
     def parse(self):
+        """Parse."""
         with open(self.html_file, encoding="ISO-8859-1") as fp:
             self.soup = BeautifulSoup(fp, features="html.parser")
 
@@ -54,13 +53,14 @@ class PresetParser(object):
         return a tuple:
             (display_name, sanitized, steam_id, steam_url)
         """
-        product = display_name.lower()                      # lowercase
-        product = re.sub("[^A-Za-z0-9\s_]", "", product)    # keep only allowed list
-        product = product.replace(' ', '_')                 # replace spaces with underscores
-        product = product.replace('__', '_')                # replace __ with _
-        return f'@{product}'                                # prepend @ and return
+        prod = display_name.lower()                 # lowercase
+        prod = re.sub(r"[^A-Za-z0-9\s_]", "", prod) # keep only allowed list
+        prod = prod.replace(' ', '_')               # replace spaces with _
+        prod = prod.replace('__', '_')              # replace __ with _
+        return f'@{prod}'                           # prepend @ and return
 
     def parse_row(self, row):
+        """Parse row."""
         display_name = row.find("td", {"data-type": "DisplayName"}).text
         steam_url = row.find("a", {"data-type": "Link"}).get("href")
         steam_id = steam_url.split("id=")[-1]
@@ -69,6 +69,7 @@ class PresetParser(object):
         return (display_name, sanitized, steam_id, steam_url)
 
     def prepare_report(self, product):
+        """Prepare report."""
         if self.output_format == 'markdown':
             self.report_markdown(product)
         if self.output_format == 'update':
@@ -77,16 +78,20 @@ class PresetParser(object):
             self.report_plain(product)
 
     def report_plain(self, product):
+        """Report plain."""
         for item in product:
             print(f'{item[0]} : {item[2]}')
 
     def report_update(self, product):
+        """Report update."""
         print('# update script')
-        for item in product:
-            print(f'poetry run steam_pull --name {item[1]} --id {item[2]} --mod')
+        for i in product:
+            print(f'poetry run steam_pull --name {i[1]} --id {i[2]} --mod')
 
     def report_markdown(self, product):
+        """Report markdown."""
         pass
+
 
 @click.command()
 @click.argument(
@@ -101,7 +106,7 @@ class PresetParser(object):
     help="Type of output to produce."
 )
 def main(html_file, output_format):
-
+    """Entry point for the tool."""
     pp = PresetParser(html_file, output_format)
     pp.parse()
 

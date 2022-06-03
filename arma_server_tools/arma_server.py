@@ -1,3 +1,4 @@
+"""Arma Server runner."""
 import logging
 import os
 import re
@@ -24,22 +25,23 @@ click_log.basic_config(logger)
 
 
 class LineConsumer():
+    """Line Consumer to parse out gak.
+    
+    https://regex101.com/
+    """
 
-    # https://regex101.com/
-
-    # regex patterns collections
     omit_re = [
-        re.compile('^\d+:\d+:\d+ Updating base class.*'),
-        re.compile('^\d+:\d+:\d+ ==== Loaded addons ===='),
-        re.compile('^\d+:\d+:\d+\s[\/\w+\.]+\s-\s.*'),
-        re.compile('^\d+:\d+:\d+ =+'),
-        re.compile('^\d+:\d+:\d+ =+ List of mods =+'),
-        re.compile('^\d+:\d+:\d+ -+'),
-        re.compile('^\d+:\d+:\d+ +name.*fullPath'),
-        re.compile('^.*:Some of magazines weren\'t stored in soldier Vest or Uniform\?'),
-        re.compile('^.*: ?No geometry and no visual shape'),
-        re.compile('^\d+:\d+:\d+ Strange convex.*'),
-        re.compile('^\d+:\d+:\d+ ?Unsupported language.*'),
+        re.compile(r'^\d+:\d+:\d+ Updating base class.*'),
+        re.compile(r'^\d+:\d+:\d+ ==== Loaded addons ===='),
+        re.compile(r'^\d+:\d+:\d+\s[\/\w+\.]+\s-\s.*'),
+        re.compile(r'^\d+:\d+:\d+ =+'),
+        re.compile(r'^\d+:\d+:\d+ =+ List of mods =+'),
+        re.compile(r'^\d+:\d+:\d+ -+'),
+        re.compile(r'^\d+:\d+:\d+ +name.*fullPath'),
+        re.compile(r'^.*:Some of magazines weren\'t stored in soldier Vest or Uniform\?'),  # noqa
+        re.compile(r'^.*: ?No geometry and no visual shape'),
+        re.compile(r'^\d+:\d+:\d+ Strange convex.*'),
+        re.compile(r'^\d+:\d+:\d+ ?Unsupported language.*'),
     ]
 
     warning_re = [
@@ -48,27 +50,27 @@ class LineConsumer():
     ]
 
     green_re = [
-        re.compile('^\d+:\d+:\d+\sBattlEye Server:.*'),
-        re.compile('.* Connected to Steam servers'),
-        re.compile('^\d+:\d+:\d+ ? Roles assigned'),
-        re.compile('^\d+:\d+:\d+ ? Reading mission.*'),
-        re.compile('^\d+:\d+:\d+ ?Starting mission:'),
-        re.compile('^\d+:\d+:\d+ ? ? Mission file:.*'),
-        re.compile('^\d+:\d+:\d+ ? ? Mission world:.*'),
-        re.compile('^\d+:\d+:\d+ ? ? Mission directory:.*'),
+        re.compile(r'^\d+:\d+:\d+\sBattlEye Server:.*'),
+        re.compile(r'.* Connected to Steam servers'),
+        re.compile(r'^\d+:\d+:\d+ ? Roles assigned'),
+        re.compile(r'^\d+:\d+:\d+ ? Reading mission.*'),
+        re.compile(r'^\d+:\d+:\d+ ?Starting mission:'),
+        re.compile(r'^\d+:\d+:\d+ ? ? Mission file:.*'),
+        re.compile(r'^\d+:\d+:\d+ ? ? Mission world:.*'),
+        re.compile(r'^\d+:\d+:\d+ ? ? Mission directory:.*'),
     ]
 
     extract_re = [
         re.compile(
-            "^\d+:\d+:\d+\s+"+
-            "(?P<name>[\w+\s\(\)-]+)\s+\|\s+"+
-            "(?P<modDir>[\w+\s]+)\s+\|\s+"+
-            "(?P<default>[\w+\s]+)\s+\|\s+"+
-            "(?P<official>[\w+\s]+)\s+\|\s+"+
-            "(?P<origin>[\w+\s]+)\s+\|\s+"+
-            "(?P<hash>[\w+\s]+)\s+\|\s+"+
-            "(?P<hashShort>[\w+\s]+)\s+\|\s+"+
-            "(?P<fullPath>[\w+\s\.\/]+)"
+            r"^\d+:\d+:\d+\s+" +
+            r"(?P<name>[\w+\s\(\)-]+)\s+\|\s+" +
+            r"(?P<modDir>[\w+\s]+)\s+\|\s+" +
+            r"(?P<default>[\w+\s]+)\s+\|\s+" +
+            r"(?P<official>[\w+\s]+)\s+\|\s+" +
+            r"(?P<origin>[\w+\s]+)\s+\|\s+" +
+            r"(?P<hash>[\w+\s]+)\s+\|\s+" +
+            r"(?P<hashShort>[\w+\s]+)\s+\|\s+" +
+            r"(?P<fullPath>[\w+\s\.\/]+) "
 
             # 14:21:06 Player dent connected (id=76561198017256167).
             # 14:09:27 Player dent disconnected.
@@ -76,29 +78,32 @@ class LineConsumer():
         ),
     ]
 
-    # 9:22:26 Initializing Steam server - Game Port: 2302, Steam Query Port: 2303
+    # 9:22:26 Initializing Steam server - Game Port: 2302, Steam Query Port: 2303 # noqa
     # Arma 3 Console version 2.00.146766 x86 : port 2302
 
     def is_omit(self, line):
-
+        """Is omit."""
         for item in self.omit_re:
             if item.match(line):
                 return True
         return False
 
     def is_warning(self, line):
+        """Is warning."""
         for item in self.warning_re:
             if item.match(line):
                 return True
         return False
 
     def is_green(self, line):
+        """Is green."""
         for item in self.green_re:
             if item.match(line):
                 return True
         return False
 
     def extract(self, line):
+        """Extract."""
         for item in self.extract_re:
             results = item.match(line)
             if results:
@@ -106,6 +111,7 @@ class LineConsumer():
         return False
 
     def parse(self, line):
+        """Parse."""
         if self.is_omit(line):
             return
 
@@ -144,6 +150,7 @@ class LineConsumer():
 #     return success
 
 class ArmaServer():
+    """Arma Server tool."""
 
     name = None
     config = None
@@ -155,6 +162,7 @@ class ArmaServer():
     # mods_folder = "mods"
 
     def parse_yaml(self, yaml_file):
+        """Parse yaml."""
         with open(yaml_file, 'r') as stream:
             try:
                 meta = yaml.safe_load(stream)
@@ -177,6 +185,7 @@ class ArmaServer():
                 print(exc)
 
     def generate_command(self):
+        """Generate command."""
         server_path = os.path.join(self.arma_home, "arma3server")
         command = [server_path, ]
         if self.name:
@@ -202,6 +211,7 @@ class ArmaServer():
         return command
 
     def serve(self):
+        """Serve."""
         success = True
         arma_cmd = self.generate_command()
         try:
@@ -228,7 +238,7 @@ class ArmaServer():
 @click.command()
 @click_log.simple_verbosity_option(logger)
 def main(yaml_file):
-
+    """Entry point."""
     if yaml_file:
         arma = ArmaServer()
         arma.parse_yaml(yaml_file)

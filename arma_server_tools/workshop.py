@@ -1,12 +1,13 @@
+"""Steam pull.
+
+Pull asset from the steam workshop and install it for arma.
+"""
 import logging
 import os
 import re
-import shutil
 import subprocess
-
 import click
 import click_log
-import yaml
 
 from .yaml_tools import home_config
 
@@ -15,6 +16,7 @@ click_log.basic_config(logger)
 
 
 class Workshop(object):
+    """Worksho tool."""
 
     # regex patterns collections
     omit_re = [
@@ -25,6 +27,7 @@ class Workshop(object):
     ]
 
     def __init__(self, item_id, item_name, is_examine, beta, betapassword):
+        """Init."""
         self.item_id = item_id
         self.item_name = item_name
         self.is_examine = is_examine
@@ -33,6 +36,7 @@ class Workshop(object):
         self.betapassword = betapassword
 
     def download(self):
+        """Download."""
         click.secho(
             f'Downloading item {self.item_id} : {self.item_name}',
             fg='green'
@@ -59,7 +63,6 @@ class Workshop(object):
         steam_cmd.append('validate')
         steam_cmd.append('+quit')
         
-
         process = subprocess.Popen(
             steam_cmd,
             stdout=subprocess.PIPE,
@@ -79,13 +82,14 @@ class Workshop(object):
         return success
 
     def is_omit(self, line):
-
+        """Is omit."""
         for item in self.omit_re:
             if item.match(line):
                 return True
         return False
 
     def examine(self):
+        """Examine."""
         src = os.path.join(
             self.arma_config['workshop'],
             self.item_id,
@@ -103,6 +107,7 @@ class Workshop(object):
                 print(f'  {f}')
 
     def symlink_to_mods(self):
+        """Symlink to mods."""
         src = os.path.join(
             self.arma_config['workshop'],
             self.item_id,
@@ -116,6 +121,7 @@ class Workshop(object):
             os.symlink(src, dst, target_is_directory=True)
 
     def symlink_to_mpmissions(self):
+        """Symlink to mpmissions."""
         item_folder = os.path.join(
             self.arma_config['workshop'],
             self.item_id
@@ -177,8 +183,16 @@ class Workshop(object):
     help="betapassword",
 )
 @click_log.simple_verbosity_option(logger)
-def main(item_id, item_name, is_mission, is_mod, is_examine, beta, betapassword):
-
+def main(
+    item_id,
+    item_name,
+    is_mission,
+    is_mod,
+    is_examine,
+    beta,
+    betapassword
+):
+    """Entry point for the tool."""
     if item_id and item_name:
         workshop = Workshop(item_id, item_name, is_examine, beta, betapassword)
 

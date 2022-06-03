@@ -1,8 +1,11 @@
+"""Server Config tool.
 
 # https://community.bistudio.com/wiki/Arma_3:_Server_Config_File
+"""
 
 
 def is_quoted(arg):
+    """Is quoted."""
     quoted = True
     if arg == "integer" or arg == "float":
         quoted = False
@@ -10,16 +13,20 @@ def is_quoted(arg):
 
 
 class BaseLineType(object):
+    """Base line type class."""
 
     @staticmethod
     def generate(name, value, arg):
+        """Generate."""
         pass
 
 
 class SimpleType(BaseLineType):
+    """Simple line type class."""
 
     @staticmethod
     def generate(name, value, arg):
+        """Generate."""
         quoted = is_quoted(arg)
         if quoted:
             return f'{name} = "{value}";'
@@ -28,9 +35,11 @@ class SimpleType(BaseLineType):
 
 
 class ListType(BaseLineType):
-    
+    """List type class."""
+
     @staticmethod
     def generate(name, value, arg):
+        """Generate."""
         quoted = is_quoted(arg)
         product = []
         newline = "\n"
@@ -48,16 +57,22 @@ class ListType(BaseLineType):
 
 
 class MissionType(BaseLineType):
+    """Mission type."""
+
     pass
 
 
 class MPMissionType(BaseLineType):
+    """MPMission type."""
+
     pass
 
 
 class Generator(object):
+    """Generator."""
 
     def __init__(self, data):
+        """Initialize."""
         self.data = data
 
     # # hostname = "Fun and Test Server";
