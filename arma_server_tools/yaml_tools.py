@@ -24,20 +24,20 @@ def home_config(config_filename):
 
 def build_empty_config(config_file):
     data = {
-        'username': 'STEAM_USERNAME',
-        'password': 'STEAM_PASSWORD',
-        'workshop': "/home/steam/.steam/steamapps/workshop/content/107410",
-        'arma_home': "/home/steam/.steam/steamcmd/arma3",
-        'arma_configs': "/home/steam/arma_configs",
+        "username": "STEAM_USERNAME",
+        "password": "STEAM_PASSWORD",
+        "workshop": "/home/steam/.steam/steamapps/workshop/content/107410",
+        "arma_home": "/home/steam/.steam/steamcmd/arma3",
+        "arma_configs": "/home/steam/arma_configs",
     }
-    with open(config_file, 'w', encoding='utf8') as outfile:
+    with open(config_file, "w", encoding="utf8") as outfile:
         yaml.dump(data, outfile, default_flow_style=False, allow_unicode=True)
 
 
 def load_local_yaml(filename):
 
     product = None
-    with open(filename, 'r') as stream:
+    with open(filename, "r") as stream:
         try:
             product = yaml.safe_load(stream)
         except yaml.YAMLError as exc:

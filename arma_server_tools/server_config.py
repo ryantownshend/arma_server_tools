@@ -1,8 +1,7 @@
-
 # https://community.bistudio.com/wiki/Arma_3:_Server_Config_File
 
 
-def is_quoted(arg):
+def is_quoted(arg) -> bool:
     quoted = True
     if arg == "integer" or arg == "float":
         quoted = False
@@ -24,11 +23,11 @@ class SimpleType(BaseLineType):
         if quoted:
             return f'{name} = "{value}";'
         else:
-            return f'{name} = {value};'
+            return f"{name} = {value};"
 
 
 class ListType(BaseLineType):
-    
+
     @staticmethod
     def generate(name, value, arg):
         quoted = is_quoted(arg)
@@ -37,12 +36,12 @@ class ListType(BaseLineType):
         if quoted:
             quote = '"'
         else:
-            quote = ''
+            quote = ""
 
-        product.append(f'{name}[] = {{{newline}')
+        product.append(f"{name}[] = {{{newline}")
         for item in value:
-            product.append(f'  {quote}{item}{quote},{newline}')
-        product.append(f'}};{newline}')
+            product.append(f"  {quote}{item}{quote},{newline}")
+        product.append(f"}};{newline}")
 
         return "".join(product)
 
@@ -92,4 +91,4 @@ class Generator(object):
     #     return "".join(product)
 
     # def generate(self):
-    #     for 
+    #     for

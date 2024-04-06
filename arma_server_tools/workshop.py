@@ -1,12 +1,10 @@
 import logging
 import os
 import re
-import shutil
 import subprocess
 
 import click
 import click_log
-import yaml
 
 from .yaml_tools import home_config
 
@@ -19,8 +17,8 @@ class Workshop(object):
     # regex patterns collections
     omit_re = [
         re.compile("^.*type 'quit' to exit"),
-        re.compile('^Loading Steam API.*'),
-        re.compile('^.*Assertion Failed: Is64BitOS.*'),
+        re.compile("^Loading Steam API.*"),
+        re.compile("^.*Assertion Failed: Is64BitOS.*"),
         # re.compile(''),
     ]
 
@@ -28,50 +26,46 @@ class Workshop(object):
         self.item_id = item_id
         self.item_name = item_name
         self.is_examine = is_examine
-        self.arma_config = home_config('arma_server.yaml')
-        self.beta = beta 
+        self.arma_config = home_config("arma_server.yaml")
+        self.beta = beta
         self.betapassword = betapassword
 
     def download(self):
-        click.secho(
-            f'Downloading item {self.item_id} : {self.item_name}',
-            fg='green'
-        )
+        click.secho(f"Downloading item {self.item_id} : {self.item_name}", fg="green")
         success = True
         steam_cmd = [
-            'steamcmd',
-            '+login',
-            self.arma_config['username'],
-            self.arma_config['password'],
-            '+workshop_download_item',
-            '107410',
+            "steamcmd",
+            "+login",
+            self.arma_config["username"],
+            self.arma_config["password"],
+            "+workshop_download_item",
+            "107410",
             self.item_id,
         ]
 
         if self.beta:
-            steam_cmd.append('-beta')
+            steam_cmd.append("-beta")
             steam_cmd.append(self.beta)
 
         if self.betapassword:
-            steam_cmd.append('-betapassword')
+            steam_cmd.append("-betapassword")
             steam_cmd.append(self.betapassword)
 
-        steam_cmd.append('validate')
-        steam_cmd.append('+quit')
-        
+        steam_cmd.append("validate")
+        steam_cmd.append("+quit")
 
         process = subprocess.Popen(
             steam_cmd,
             stdout=subprocess.PIPE,
         )
-        for line in iter(lambda: process.stdout.readline(), b''):
+        for line in iter(lambda: process.stdout.readline(), b""):
 
-            cleaned = line.decode('utf-8').strip()
-            if '...' in cleaned:
-                pieces = cleaned.split('...')
+            cleaned = line.decode("utf-8").strip()
+            if "..." in cleaned:
+                pieces = cleaned.split("...")
                 click.echo(pieces[0])
             elif "ERROR" in cleaned:
-                click.secho(cleaned, fg='red')
+                click.secho(cleaned, fg="red")
                 success = False
             elif not self.is_omit(cleaned):
                 click.echo(cleaned)
@@ -87,50 +81,40 @@ class Workshop(object):
 
     def examine(self):
         src = os.path.join(
-            self.arma_config['workshop'],
+            self.arma_config["workshop"],
             self.item_id,
         )
         dst = os.path.join(
-            self.arma_config['arma_home'],
-            'mods',
+            self.arma_config["arma_home"],
+            "mods",
             self.item_name,
         )
         if self.is_examine:
-            print(f'src: {src}')
-            print(f'dst: {dst}')
+            print(f"src: {src}")
+            print(f"dst: {dst}")
             files = os.listdir(src)
             for f in files:
-                print(f'  {f}')
+                print(f"  {f}")
 
     def symlink_to_mods(self):
         src = os.path.join(
-            self.arma_config['workshop'],
+            self.arma_config["workshop"],
             self.item_id,
         )
         dst = os.path.join(
-            self.arma_config['arma_home'],
-            'mods',
+            self.arma_config["arma_home"],
+            "mods",
             self.item_name,
         )
         if not os.path.exists(dst):
             os.symlink(src, dst, target_is_directory=True)
 
     def symlink_to_mpmissions(self):
-        item_folder = os.path.join(
-            self.arma_config['workshop'],
-            self.item_id
-        )
+        item_folder = os.path.join(self.arma_config["workshop"], self.item_id)
         files = os.listdir(item_folder)
-        if(len(files)) == 1:
-            src = os.path.join(
-                item_folder,
-                files[0]
-            )
-            dst = os.path.join(
-                self.arma_config['arma_home'],
-                'mpmissions',
-                self.item_name
-            )
+        if (len(files)) == 1:
+            src = os.path.join(item_folder, files[0])
+            dst = os.path.join(self.arma_config["arma_home"], "mpmissions", self.item_name)
             if not os.path.exists(dst):
                 os.symlink(src, dst, target_is_directory=False)
         else:
@@ -138,16 +122,8 @@ class Workshop(object):
 
 
 @click.command()
-@click.option(
-    "--id",
-    "item_id",
-    help="workshop id of mod"
-)
-@click.option(
-    "--name",
-    "item_name",
-    help="name of mod"
-)
+@click.option("--id", "item_id", help="workshop id of mod")
+@click.option("--name", "item_name", help="name of mod")
 @click.option(
     "--mission",
     "is_mission",
@@ -191,5 +167,5 @@ def main(item_id, item_name, is_mission, is_mod, is_examine, beta, betapassword)
                 workshop.symlink_to_mods()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -6,7 +6,7 @@ Tools to manage running content on arma3server
 
 ### commands
 
-```
+```shell
 poetry run server --help
 poetry run pull --help
 ```
@@ -19,12 +19,12 @@ Arma server stuff
 
 python libraries
 
--poetry
--click
--click_log
--rich
--PyYAML
--pytest
+- poetry
+- click
+- click_log
+- rich
+- PyYAML
+- pytest
 
 articles references
 
@@ -35,7 +35,7 @@ articles references
 yaml files
 yaml config in home dir
 
-```
+```yaml
 --- # ~/arma_server.yaml
 username: steam_username
 password: steam_password
@@ -53,7 +53,7 @@ yaml config for specific server
 
 without mods
 
-```
+```yaml
 --- # example without mods
 name: direct_action_altis
 config: direct_action/direct_action_altis.cfg
@@ -62,7 +62,7 @@ port: 2302
 
 with mods
 
-```
+```yaml
 --- # example with some mods 
 name: survival_altis
 config: survival/survival_altis.cfg
@@ -71,8 +71,6 @@ mods:
   - niarms_all
 ```
 
-
 ## steamcmd stuff
 
 <https://developer.valvesoftware.com/wiki/SteamCMD>
-
